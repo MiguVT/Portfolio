@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiguVT - VTuber & Developer Portfolio</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        
+        :root {
+            --bg-color: #0a0a14;
+            --container-bg: rgba(20, 20, 35, 0.8);
+            --accent-color: #ff69b4;
+            --text-color: #f0f0f0;
+            --secondary-color: #ff9ff3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            background-color: white;
+            width: 2px;
+            height: 2px;
+            border-radius: 50%;
+            opacity: 0.5;
+            transition: all 5s ease;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .container {
+            background-color: var(--container-bg);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(255, 105, 180, 0.2);
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        h1 {
+            color: var(--accent-color);
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .roles {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .role {
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+            padding: 0.7rem 1.2rem;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .role:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(255, 105, 180, 0.3);
+        }
+
+        .social-links {
+            margin-top: 2rem;
+        }
+
+        .social-links a {
+            color: var(--accent-color);
+            text-decoration: none;
+            margin: 0 1rem;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .social-links a:hover {
+            color: var(--secondary-color);
+            transform: scale(1.1);
+        }
+
+        .coming-soon-text {
+            background: linear-gradient(45deg, var(--accent-color), var(--secondary-color));
+            background-clip: text;
+            
+            -webkit-text-fill-color: transparent;
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--accent-color) 0%, transparent 70%);
+            opacity: 0.2;
+            transition: all 0.5s ease;
+            filter: blur(20px);
+        }
+
+        .license-notice {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.8rem;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .license-notice:hover {
+            opacity: 1;
+        }
+
+        .license-notice a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .license-notice a:hover {
+            text-decoration: underline;
+        }
+
+        #circle1 { width: 200px; height: 200px; top: -100px; left: -100px; }
+        #circle2 { width: 300px; height: 300px; bottom: -150px; right: -150px; }
+    </style>
+</head>
+<body>
+    <div class="stars" style="left: 52px; top: 18px;"></div>
+    <div class="container">
+        <div id="circle1" class="circle"></div>
+        <div id="circle2" class="circle"></div>
+        <div class="coming-soon-text">Portfolio Launching Soon</div>
+        <h1>MiguVT</h1>
+        <p>Bridging the worlds of VTubing and software development.</p>
+        <div class="roles">
+            <div class="role">VTuber</div>
+            <div class="role">Back-end Developer</div>
+            <div class="role">Digital Media Production</div>
+        </div>
+        <p style="margin-top: 2rem;">Comprehensive showcase of projects and expertise coming shortly.</p>
+        <div class="social-links">
+            <a href="https://github.com/MiguVT" target="_blank"><i class="fab fa-github"></i></a>
+            <a href="https://www.twitch.tv/miguvt/" target="_blank"><i class="fab fa-twitch"></i></a>
+            <a href="https://www.youtube.com/@MiguVT" target="_blank"><i class="fab fa-youtube"></i></a>
+            <a href="https://x.com/MiguVT" target="_blank"><i class="fab fa-twitter"></i></a>
+        </div>
+        <div class="license-notice">
+            &copy; 2024 Yara aka. MiguVT. Licensed under the 
+            <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License, Version 2.0</a>.
+        </div>
+    </div>
+
+    <script>
+        const container = document.querySelector('.container');
+        const circles = document.querySelectorAll('.circle');
+        const starsContainer = document.querySelector('.stars');
+
+        function lerp(start, end, t) {
+            return start * (1 - t) + end * t;
+        }
+
+        let currentX = 0;
+        let currentY = 0;
+        let aimX = 0;
+        let aimY = 0;
+
+        // Create stars
+        for (let i = 0; i < 100; i++) {
+            const star = document.createElement('div');
+            star.classList.add('star');
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.top = `${Math.random() * 100}%`;
+            star.style.animationDuration = `${Math.random() * 3 + 2}s`; // Random duration between 2-5s
+            star.style.animationDelay = `${Math.random() * 5}s`; // Random delay up to 5s
+            starsContainer.appendChild(star);
+        }
+
+        function twinkleStars() {
+            const stars = document.querySelectorAll('.star');
+            stars.forEach(star => {
+                if (Math.random() < 0.3) { // 30% chance for a star to twinkle
+                    star.style.animation = 'twinkle 1s ease-in-out';
+                    setTimeout(() => {
+                        star.style.animation = 'none';
+                    }, 1000);
+                }
+            });
+        }
+
+        function moveStars() {
+            const stars = document.querySelectorAll('.star');
+            stars.forEach(star => {
+                let x = parseFloat(star.style.left);
+                let y = parseFloat(star.style.top);
+                x += (Math.random() - 0.5) * 0.2; // Very subtle random movement
+                y += (Math.random() - 0.5) * 0.2;
+                if (x < 0) x = 100;
+                if (x > 100) x = 0;
+                if (y < 0) y = 100;
+                if (y > 100) y = 0;
+                star.style.left = `${x}%`;
+                star.style.top = `${y}%`;
+            });
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            const { clientX: mouseX, clientY: mouseY } = e;
+            const { left, top, width, height } = container.getBoundingClientRect();
+            
+            aimX = (mouseX - left - width / 2) / (width / 2);
+            aimY = (mouseY - top - height / 2) / (height / 2);
+        });
+
+        function animate() {
+            currentX = lerp(currentX, aimX, 0.05);
+            currentY = lerp(currentY, aimY, 0.05);
+
+            circles.forEach((circle, index) => {
+                const factor = index === 0 ? 1 : -1;
+                circle.style.transform = `translate(${currentX * 10 * factor}px, ${currentY * 10 * factor}px)`;
+            });
+
+            // Very subtle 3D effect
+            container.style.transform = `
+                perspective(1000px)
+                rotateY(${currentX * 2}deg)
+                rotateX(${-currentY * 2}deg)
+                translateZ(10px)
+            `;
+
+            // Subtle star movement
+            const stars = document.querySelectorAll('.star');
+            stars.forEach(star => {
+                const rect = star.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                const distanceX = (centerX - window.innerWidth / 2) / (window.innerWidth / 2);
+                const distanceY = (centerY - window.innerHeight / 2) / (window.innerHeight / 2);
+                star.style.transform = `translate(${-currentX * distanceX * 5}px, ${-currentY * distanceY * 5}px)`;
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+        setInterval(moveStars, 5000); // Slow star movement
+        setInterval(twinkleStars, 100); // Check for twinkling every 100ms
+    </script>
+</body>
+</html>
