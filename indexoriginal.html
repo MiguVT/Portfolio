@@ -272,68 +272,26 @@
     (function() {
         const container = document.querySelector('.container');
         const circles = document.querySelectorAll('.circle');
-        const starsContainer = document.querySelector('.stars');
-
-        function lerp(start, end, t) {
-            return start * (1 - t) + end * t;
-        }
-
-        let currentX = 0;
-        let currentY = 0;
-        let aimX = 0;
-        let aimY = 0;
+        let currentX = 0, currentY = 0, aimX = 0, aimY = 0;
 
         function createStars() {
-            const starCount = 100;
             const fragment = document.createDocumentFragment();
-            for (let i = 0; i < starCount; i++) {
+            for (let i = 0; i < 100; i++) {
                 const star = document.createElement('div');
-                star.classList.add('star');
-                star.style.left = `${Math.random() * 100}%`;
-                star.style.top = `${Math.random() * 100}%`;
-                star.style.animationDuration = `${Math.random() * 3 + 2}s`;
-                star.style.animationDelay = `${Math.random() * 5}s`;
+                star.className = 'star';
+                star.style.cssText = `
+                    left: ${Math.random() * 100}%;
+                    top: ${Math.random() * 100}%;
+                    animation: twinkle ${Math.random() * 3 + 2}s infinite;
+                `;
                 fragment.appendChild(star);
             }
-            starsContainer.appendChild(fragment);
+            document.querySelector('.stars').appendChild(fragment);
         }
 
-        function twinkleStars() {
-            const stars = starsContainer.children;
-            for (let star of stars) {
-                if (Math.random() < 0.3) {
-                    star.style.opacity = Math.random();
-                }
-            }
-        }
-
-        function moveStars() {
-            const stars = starsContainer.children;
-            for (let star of stars) {
-                let x = parseFloat(star.style.left);
-                let y = parseFloat(star.style.top);
-                x += (Math.random() - 0.5) * 0.2;
-                y += (Math.random() - 0.5) * 0.2;
-                if (x < 0) x = 100;
-                if (x > 100) x = 0;
-                if (y < 0) y = 100;
-                if (y > 100) y = 0;
-                star.style.left = `${x}%`;
-                star.style.top = `${y}%`;
-            }
-        }
-
-        function handleMouseMove(e) {
-            const { clientX: mouseX, clientY: mouseY } = e;
-            const { left, top, width, height } = container.getBoundingClientRect();
-            
-            aimX = (mouseX - left - width / 2) / (width / 2);
-            aimY = (mouseY - top - height / 2) / (height / 2);
-        }
-
-        function animate() {
-            currentX = lerp(currentX, aimX, 0.05);
-            currentY = lerp(currentY, aimY, 0.05);
+        function updateElements() {
+            currentX += (aimX - currentX) * 0.05;
+            currentY += (aimY - currentY) * 0.05;
 
             circles.forEach((circle, index) => {
                 const factor = index === 0 ? 1 : -1;
@@ -347,28 +305,18 @@
                 translateZ(10px)
             `;
 
-            const stars = starsContainer.children;
-            for (let star of stars) {
-                const rect = star.getBoundingClientRect();
-                const centerX = rect.left + rect.width / 2;
-                const centerY = rect.top + rect.height / 2;
-                const distanceX = (centerX - window.innerWidth / 2) / (window.innerWidth / 2);
-                const distanceY = (centerY - window.innerHeight / 2) / (window.innerHeight / 2);
-                star.style.transform = `translate(${-currentX * distanceX * 5}px, ${-currentY * distanceY * 5}px)`;
-            }
-
-            requestAnimationFrame(animate);
+            requestAnimationFrame(updateElements);
         }
 
-        function init() {
-            createStars();
-            document.addEventListener('mousemove', handleMouseMove);
-            animate();
-            setInterval(moveStars, 5000);
-            setInterval(twinkleStars, 100);
+        function handleMouseMove(e) {
+            const { left, top, width, height } = container.getBoundingClientRect();
+            aimX = (e.clientX - left - width / 2) / (width / 2);
+            aimY = (e.clientY - top - height / 2) / (height / 2);
         }
 
-        init();
+        createStars();
+        document.addEventListener('mousemove', handleMouseMove);
+        requestAnimationFrame(updateElements);
     })();
     </script>
 </body>
