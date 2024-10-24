@@ -273,9 +273,9 @@
     (function() {
         const container = document.querySelector('.container');
         const circles = document.querySelectorAll('.circle');
-        let ticking = false;
         let currentX = 0, currentY = 0, aimX = 0, aimY = 0;
-
+        let isAnimating = true;
+    
         function createStars() {
             const starCount = 100;
             const starsHTML = Array(starCount).fill().map(() => 
@@ -283,42 +283,44 @@
             ).join('');
             document.querySelector('.stars').innerHTML = starsHTML;
         }
-
+    
         function updateElements() {
             currentX += (aimX - currentX) * 0.05;
             currentY += (aimY - currentY) * 0.05;
-
+            
             const circleTransforms = circles.length === 2 ? 
                 [`translate(${currentX * 10}px, ${currentY * 10}px)`, `translate(${-currentX * 10}px, ${-currentY * 10}px)`] :
                 circles.map((_, i) => `translate(${currentX * 10 * (i === 0 ? 1 : -1)}px, ${currentY * 10 * (i === 0 ? 1 : -1)}px)`);
-
+            
             circles.forEach((circle, i) => {
                 circle.style.transform = circleTransforms[i];
             });
-
+    
             container.style.transform = `
                 perspective(1000px)
                 rotateY(${currentX * 2}deg)
                 rotateX(${-currentY * 2}deg)
                 translateZ(10px)
             `;
-
-            ticking = false;
         }
-
+    
+        function animate() {
+            if (isAnimating) {
+                updateElements();
+                requestAnimationFrame(animate);
+            }
+        }
+    
         function handleMouseMove(e) {
             const { left, top, width, height } = container.getBoundingClientRect();
             aimX = (e.clientX - left - width / 2) / (width / 2);
             aimY = (e.clientY - top - height / 2) / (height / 2);
-
-            if (!ticking) {
-                requestAnimationFrame(updateElements);
-                ticking = true;
-            }
         }
-
+    
+        // Inicializar
         createStars();
         document.addEventListener('mousemove', handleMouseMove);
+        animate();
     })();
     </script>
 </body>
