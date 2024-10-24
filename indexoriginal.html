@@ -121,6 +121,7 @@
             overflow: hidden;
             backdrop-filter: blur(10px);
             transition: all 0.3s ease;
+            transform: perspective(1000px) rotateY(var(--rot-y, 0deg)) rotateX(var(--rot-x, 0deg)) translateZ(10px);
             transform-style: preserve-3d;
             perspective: 1000px;
             will-change: transform;
@@ -195,6 +196,7 @@
             background: radial-gradient(circle, var(--accent-color) 0%, transparent 70%);
             opacity: 0.2;
             transition: all 0.5s ease;
+            transform: translate(var(--x, 0px), var(--y, 0px));
             filter: blur(20px);
             aspect-ratio: 1 / 1;
             will-change: transform;
@@ -273,54 +275,76 @@
     (function() {
         const container = document.querySelector('.container');
         const circles = document.querySelectorAll('.circle');
-        let currentX = 0, currentY = 0, aimX = 0, aimY = 0;
-        let isAnimating = true;
+        
+        // Pre-definir las propiedades CSS para mejor rendimiento
+        container.style.setProperty('--rot-y', '0deg');
+        container.style.setProperty('--rot-x', '0deg');
+        circles.forEach(circle => {
+            circle.style.setProperty('--x', '0px');
+            circle.style.setProperty('--y', '0px');
+        });
     
         function createStars() {
             const starCount = 100;
-            const starsHTML = Array(starCount).fill().map(() => 
-                `<div class="star" style="left:${Math.random()*100}%;top:${Math.random()*100}%;animation-duration:${Math.random()*3+2}s"></div>`
-            ).join('');
-            document.querySelector('.stars').innerHTML = starsHTML;
-        }
-    
-        function updateElements() {
-            currentX += (aimX - currentX) * 0.05;
-            currentY += (aimY - currentY) * 0.05;
+            const fragment = document.createDocumentFragment();
             
-            const circleTransforms = circles.length === 2 ? 
-                [`translate(${currentX * 10}px, ${currentY * 10}px)`, `translate(${-currentX * 10}px, ${-currentY * 10}px)`] :
-                circles.map((_, i) => `translate(${currentX * 10 * (i === 0 ? 1 : -1)}px, ${currentY * 10 * (i === 0 ? 1 : -1)}px)`);
-            
-            circles.forEach((circle, i) => {
-                circle.style.transform = circleTransforms[i];
-            });
-    
-            container.style.transform = `
-                perspective(1000px)
-                rotateY(${currentX * 2}deg)
-                rotateX(${-currentY * 2}deg)
-                translateZ(10px)
-            `;
-        }
-    
-        function animate() {
-            if (isAnimating) {
-                updateElements();
-                requestAnimationFrame(animate);
+            for(let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.cssText = `
+                    left:${Math.random()*100}%;
+                    top:${Math.random()*100}%;
+                    animation-duration:${Math.random()*3+2}s
+                `;
+                fragment.appendChild(star);
             }
+            
+            document.querySelector('.stars').appendChild(fragment);
         }
     
+        // Cache de los valores del rect para evitar reflow
+        let rect = container.getBoundingClientRect();
+        let halfWidth = rect.width / 2;
+        let halfHeight = rect.height / 2;
+    
+        // Actualizar cache en resize
+        window.addEventListener('resize', () => {
+            rect = container.getBoundingClientRect();
+            halfWidth = rect.width / 2;
+            halfHeight = rect.height / 2;
+        }, { passive: true });
+    
+        // Función optimizada de movimiento
         function handleMouseMove(e) {
-            const { left, top, width, height } = container.getBoundingClientRect();
-            aimX = (e.clientX - left - width / 2) / (width / 2);
-            aimY = (e.clientY - top - height / 2) / (height / 2);
+            const x = (e.clientX - rect.left - halfWidth) / halfWidth;
+            const y = (e.clientY - rect.top - halfHeight) / halfHeight;
+    
+            // Actualizar container
+            container.style.setProperty('--rot-y', `${x * 2}deg`);
+            container.style.setProperty('--rot-x', `${-y * 2}deg`);
+    
+            // Actualizar círculos
+            const xOffset = x * 10;
+            const yOffset = y * 10;
+            
+            circles[0].style.setProperty('--x', `${xOffset}px`);
+            circles[0].style.setProperty('--y', `${yOffset}px`);
+            circles[1].style.setProperty('--x', `${-xOffset}px`);
+            circles[1].style.setProperty('--y', `${-yOffset}px`);
         }
     
-        // Inicializar
+        // Optimización del evento mousemove con RAF
+        let frameId;
+        document.addEventListener('mousemove', (e) => {
+            if (frameId) return;
+            frameId = requestAnimationFrame(() => {
+                handleMouseMove(e);
+                frameId = null;
+            });
+        }, { passive: true });
+    
+        // Inicialización
         createStars();
-        document.addEventListener('mousemove', handleMouseMove);
-        animate();
     })();
     </script>
 </body>
