@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP Address Converter</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --background: #eef2f6;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-secondary: #475569;
+            --border: #cbd5e1;
+            --error: #ef4444;
+            --success: #10b981;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --background: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border: #334155;
+            --shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 500px;
+            border: 1.5px solid var(--border);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            background: linear-gradient(90deg, var(--primary), #4ecdc4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            font-size: 1.25rem;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--border);
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            border: 1.5px solid var(--border);
+            border-radius: 0.5rem;
+            background-color: var(--card-bg);
+            color: var(--text);
+            font-family: 'Courier New', monospace;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        input::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.7;
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        button {
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .convert-btn {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .convert-btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .clear-btn {
+            background-color: var(--card-bg);
+            border: 1.5px solid var(--border);
+            color: var(--text);
+        }
+
+        .clear-btn:hover {
+            background-color: var(--border);
+            transform: translateY(-1px);
+        }
+
+        .result, .error {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-family: 'Courier New', monospace;
+            display: none;
+        }
+
+        .result {
+            background-color: var(--background);
+            border: 2px solid var(--success);
+            color: var(--success);
+        }
+
+        .error {
+            background-color: var(--background);
+            border: 2px solid var(--error);
+            color: var(--error);
+        }
+
+        .examples {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1.5px solid var(--border);
+        }
+
+        .examples h2 {
+            font-size: 0.875rem;
+            color: var(--text);
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .example-item {
+            background-color: var(--background);
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            color: var(--text);
+            border: 1.5px solid var(--border);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .copy-btn {
+            float: right;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0.25rem;
+        }
+
+        .copy-btn:hover {
+            color: var(--primary);
+        }
+
+        .footer {
+            margin-top: 2.5rem;
+            text-align: center;
+            font-size: 0.925rem;
+            font-weight: 500;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0.9;
+        }
+
+        .footer .heart {
+            display: inline-block;
+            color: #e11d48;
+            -webkit-text-fill-color: #e11d48;
+            animation: heartbeat 1.5s ease infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 1.5rem;
+            }
+
+            .button-group {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>IP Address Converter</h1>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+
+        <div class="input-group">
+            <label for="ipInput">Enter IP Address (Decimal or Binary)</label>
+            <input type="text" id="ipInput" placeholder="e.g., 192.168.1.1">
+        </div>
+
+        <div class="button-group">
+            <button class="convert-btn" onclick="convertIP()">
+                <i class="fas fa-exchange-alt"></i>
+                Convert
+            </button>
+            <button class="clear-btn" onclick="clearAll()">
+                <i class="fas fa-times"></i>
+                Clear
+            </button>
+        </div>
+
+        <div id="result" class="result"></div>
+        <div id="error" class="error"></div>
+
+        <div class="examples">
+            <h2>Examples</h2>
+            <div class="example-item">
+                Decimal: 192.168.1.1
+                <button class="copy-btn" onclick="copyExample('192.168.1.1')">
+                    <i class="far fa-copy"></i>
+                </button>
+            </div>
+            <div class="example-item">
+                Binary: 11000000.10101000.00000001.00000001
+                <button class="copy-btn" onclick="copyExample('11000000.10101000.00000001.00000001')">
+                    <i class="far fa-copy"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="footer">
+            Made with <span class="heart">❤</span> by Yara
+        </div>
+    </div>
+
+    <script>
+        let isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
+        // Set the initial icon based on the theme
+        const themeIcon = document.querySelector('.theme-toggle i');
+        themeIcon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+
+        function toggleTheme() {
+            isDark = !isDark;
+            document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
+            const icon = document.querySelector('.theme-toggle i');
+            icon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        // Detect system theme changes
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            isDark = event.matches;
+            document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
+            const icon = document.querySelector('.theme-toggle i');
+            icon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+        });
+
+        function isValidDecimalIP(ip) {
+            const parts = ip.split('.');
+            if (parts.length !== 4) return false;
+            return parts.every(part => {
+                const num = parseInt(part, 10);
+                return !isNaN(num) && num >= 0 && num <= 255 && part.match(/^\d+$/);
+            });
+        }
+
+        function isValidBinaryIP(ip) {
+            const parts = ip.split('.');
+            if (parts.length !== 4) return false;
+            return parts.every(part => {
+                return part.length === 8 && /^[01]+$/.test(part);
+            });
+        }
+
+        function decimalToBinary(ip) {
+            return ip.split('.').map(num => {
+                return parseInt(num, 10).toString(2).padStart(8, '0');
+            }).join('.');
+        }
+
+        function binaryToDecimal(ip) {
+            return ip.split('.').map(binary => {
+                return parseInt(binary, 2).toString(10);
+            }).join('.');
+        }
+
+        function showResult(text) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `${text} <button class="copy-btn" onclick="copyResult('${text}')"><i class="far fa-copy"></i></button>`;
+            document.getElementById('error').style.display = 'none';
+        }
+
+        function showError(text) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.style.display = 'block';
+            errorDiv.textContent = text;
+            document.getElementById('result').style.display = 'none';
+        }
+
+        function convertIP() {
+            const input = document.getElementById('ipInput').value.trim();
+            
+            if (!input) {
+                showError('Please enter an IP address');
+                return;
+            }
+
+            try {
+                if (isValidDecimalIP(input)) {
+                    showResult(`Binary IP: ${decimalToBinary(input)}`);
+                } else if (isValidBinaryIP(input)) {
+                    showResult(`Decimal IP: ${binaryToDecimal(input)}`);
+                } else {
+                    showError('Invalid IP address format. Please use a valid format from the examples below.');
+                }
+            } catch (err) {
+                showError('An error occurred during conversion');
+            }
+        }
+
+        function clearAll() {
+            document.getElementById('ipInput').value = '';
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('error').style.display = 'none';
+        }
+
+        function copyExample(text) {
+            navigator.clipboard.writeText(text);
+            document.getElementById('ipInput').value = text;
+        }
+
+        function copyResult(text) {
+            const value = text.split(': ')[1];
+            navigator.clipboard.writeText(value);
+        }
+
+        document.getElementById('ipInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                convertIP();
+            }
+        });
+    </script>
+</body>
+</html>
