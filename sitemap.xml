@@ -10,4 +10,13 @@
       <changefreq>weekly</changefreq>
       <priority>1.0</priority>
    </url>
+
+
+   <!-- Herramienta IP Calculator -->
+   <url>
+      <loc>https://www.miguvt.com/tools/ipcalculator/</loc>
+      <lastmod>2025-02-19</lastmod>
+      <changefreq>weekly</changefreq>
+      <priority>0.8</priority>
+   </url>
 </urlset>
